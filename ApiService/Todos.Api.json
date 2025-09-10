@@ -2,7 +2,7 @@
   "x-generator": "NSwag v14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
-    "title": "Todos API",
+    "title": "Vida AI Restaurant Analytics API",
     "version": "v1"
   },
   "servers": [
@@ -11,12 +11,24 @@
     }
   ],
   "paths": {
-    "/api/Todos": {
-      "get": {
+    "/api/Analytics/correlation": {
+      "post": {
         "tags": [
-          "Todos"
+          "Analytics"
         ],
-        "operationId": "GetTodos",
+        "operationId": "CalculateCorrelation",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CorrelationRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
         "responses": {
           "200": {
             "description": "",
@@ -25,7 +37,236 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TodoItem"
+                    "$ref": "#/components/schemas/CorrelationResultDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Analytics/restaurants/{restaurantId}/correlations": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "GetCorrelationAnalysis",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrelationAnalysisDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Analytics/restaurants/{restaurantId}/data": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "operationId": "GetAnalyticsData",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "days",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 90
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnalyticsDataDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/restaurants/{restaurantId}/Metrics": {
+      "get": {
+        "tags": [
+          "Metrics"
+        ],
+        "operationId": "GetRestaurantMetrics",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "metricName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "startDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            },
+            "x-position": 5
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MetricValueDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/restaurants/{restaurantId}/Metrics/bulk": {
+      "post": {
+        "tags": [
+          "Metrics"
+        ],
+        "operationId": "BulkImportMetrics",
+        "parameters": [
+          {
+            "name": "restaurantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "metrics",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CreateMetricValueDto"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Restaurants": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "operationId": "GetRestaurants",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RestaurantDto"
                   }
                 }
               }
@@ -35,15 +276,15 @@
       },
       "post": {
         "tags": [
-          "Todos"
+          "Restaurants"
         ],
-        "operationId": "CreateTodo",
+        "operationId": "CreateRestaurant",
         "requestBody": {
-          "x-name": "command",
+          "x-name": "restaurant",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTodoCommand"
+                "$ref": "#/components/schemas/CreateRestaurantDto"
               }
             }
           },
@@ -65,12 +306,42 @@
         }
       }
     },
-    "/api/Todos/{id}": {
+    "/api/Restaurants/{id}": {
+      "get": {
+        "tags": [
+          "Restaurants"
+        ],
+        "operationId": "GetRestaurantById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestaurantDto"
+                }
+              }
+            }
+          }
+        }
+      },
       "put": {
         "tags": [
-          "Todos"
+          "Restaurants"
         ],
-        "operationId": "UpdateTodo",
+        "operationId": "UpdateRestaurant",
         "parameters": [
           {
             "name": "id",
@@ -84,11 +355,11 @@
           }
         ],
         "requestBody": {
-          "x-name": "dto",
+          "x-name": "restaurant",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateTodoCommandDto"
+                "$ref": "#/components/schemas/UpdateRestaurantDto"
               }
             }
           },
@@ -111,9 +382,9 @@
       },
       "delete": {
         "tags": [
-          "Todos"
+          "Restaurants"
         ],
-        "operationId": "DeleteTodo",
+        "operationId": "DeleteRestaurant",
         "parameters": [
           {
             "name": "id",
@@ -141,32 +412,40 @@
         }
       }
     },
-    "/api/Todos/classify": {
-      "post": {
+    "/api/Restaurants/{id}/kpis": {
+      "get": {
         "tags": [
-          "Todos"
+          "Restaurants"
         ],
-        "operationId": "ClassifyTodo",
-        "requestBody": {
-          "x-name": "request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ClassifyTodoRequest"
-              }
-            }
+        "operationId": "GetRestaurantKpis",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
           },
-          "required": true,
-          "x-position": 1
-        },
+          {
+            "name": "period",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "last_30d"
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/RestaurantKpiDto"
                 }
               }
             }
@@ -177,7 +456,195 @@
   },
   "components": {
     "schemas": {
-      "TodoItem": {
+      "CorrelationResultDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "metric1": {
+            "type": "string"
+          },
+          "metric2": {
+            "type": "string"
+          },
+          "correlationCoefficient": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "strength": {
+            "type": "string"
+          }
+        }
+      },
+      "CorrelationRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "restaurantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "metricNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CorrelationAnalysisDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "restaurantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurantName": {
+            "type": "string"
+          },
+          "analysisDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "correlationType": {
+            "type": "string"
+          },
+          "correlations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CorrelationDto"
+            }
+          }
+        }
+      },
+      "CorrelationDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "metricName": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "coefficient": {
+            "type": "number",
+            "format": "double"
+          },
+          "pValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "isSignificant": {
+            "type": "boolean"
+          },
+          "strength": {
+            "type": "string"
+          },
+          "direction": {
+            "type": "string"
+          },
+          "interpretation": {
+            "type": "string"
+          }
+        }
+      },
+      "AnalyticsDataDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "restaurantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurantName": {
+            "type": "string"
+          },
+          "dataPeriod": {
+            "type": "string"
+          },
+          "revenueDataPoints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "metricDataPoints": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "availableMetrics": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dataQuality": {
+            "type": "string"
+          }
+        }
+      },
+      "MetricValueDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metricName": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateMetricValueDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "metricName": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RestaurantDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -185,46 +652,133 @@
             "type": "integer",
             "format": "int32"
           },
-          "title": {
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
             "type": "string",
             "nullable": true
           },
-          "category": {
+          "email": {
             "type": "string",
             "nullable": true
           },
-          "isComplete": {
-            "type": "boolean"
-          }
-        }
-      },
-      "CreateTodoCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "title": {
-            "type": "string"
-          }
-        }
-      },
-      "UpdateTodoCommandDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "title": {
+          "timeZoneId": {
             "type": "string"
           },
-          "isComplete": {
-            "type": "boolean"
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "organizationId": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
-      "ClassifyTodoRequest": {
+      "CreateRestaurantDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "description": {
+          "name": {
             "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeZoneId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "UpdateRestaurantDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeZoneId": {
+            "type": "string"
+          }
+        }
+      },
+      "RestaurantKpiDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "restaurantId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "restaurantName": {
+            "type": "string"
+          },
+          "totalRevenue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "averageRevenue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "prepTimeAverage": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "tableTurnoverAverage": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "orderAccuracyAverage": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "customerSatisfactionAverage": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalTransactions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periodStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "periodEnd": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }

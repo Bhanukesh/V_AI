@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MigrationService.Migrations
 {
-    [DbContext(typeof(TodoDbContext))]
+    [DbContext(typeof(RestaurantDbContext))]
     [Migration("20250822142707_InitialCreate")]
     partial class InitialCreate
     {
@@ -24,24 +24,7 @@ namespace MigrationService.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Data.Todo", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("IsComplete")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Todos");
-                });
+            // Todo entities removed
 #pragma warning restore 612, 618
         }
     }

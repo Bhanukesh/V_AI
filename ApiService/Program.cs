@@ -1,5 +1,6 @@
 using System.Reflection;
 using ApiService.Python;
+using ApiService.Services;
 using Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,12 +22,12 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddEndpointsApiExplorer();
 
 // Add database context
-builder.AddSqlServerDbContext<TodoDbContext>("tododb");
+builder.AddSqlServerDbContext<RestaurantDbContext>("restaurantdb");
 
 builder.Services.AddOpenApiDocument(options =>
 {
     options.DocumentName = "v1";
-    options.Title = "Todos API";
+    options.Title = "Vida AI Restaurant Analytics API";
     options.Version = "v1";
     options.UseHttpAttributeNameAsOperationId = true;
 
@@ -38,6 +39,14 @@ builder.Services.AddOpenApiDocument(options =>
 
 builder.Services.AddHttpClient<PythonClient>(
     static client => client.BaseAddress = new("http://pythonapi"));
+
+// Add Python analytics service with HttpClient
+builder.Services.AddHttpClient<IPythonAnalyticsService, PythonAnalyticsService>(
+    client => 
+    {
+        client.BaseAddress = new Uri("http://pythonapi");
+        client.Timeout = TimeSpan.FromSeconds(30);
+    });
 
 var app = builder.Build();
 

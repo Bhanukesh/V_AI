@@ -3,9 +3,9 @@ var builder = DistributedApplication.CreateBuilder(args);
 var sqlPassword = builder.AddParameter("sql-password", secret: true);
 
 var sqlServer = builder
-        .AddSqlServer("todo-sqlserver", password: sqlPassword, port: 9000)
+        .AddSqlServer("restaurant-sqlserver", password: sqlPassword, port: 9000)
         .WithLifetime(ContainerLifetime.Persistent)
-        .AddDatabase("tododb");
+        .AddDatabase("restaurantdb");
 
 var migrationService = builder.AddProject<Projects.MigrationService>("migrationservice")
     .WithReference(sqlServer)
@@ -25,10 +25,10 @@ var apiService = builder.AddProject<Projects.ApiService>("apiservice")
     .WaitFor(migrationService)
     .WithHttpHealthCheck("/health");
 
-builder.AddNpmApp("web", "../web", "dev")
+builder.AddNodeApp("web", "../web", "pnpm", ["dev"])
     .WithReference(apiService)
     .WithReference(pythonApi)
-    .WithHttpEndpoint(3000, env: "PORT")
+    .WithHttpEndpoint(port: 3000, name: "http")
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 

@@ -1,1 +1,364 @@
-{"openapi": "3.1.0", "info": {"title": "Movies API", "description": "Movies API with Todo Classification", "version": "v1"}, "paths": {"/": {"get": {"summary": "Redirect To Swagger", "operationId": "redirect_to_swagger__get", "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {}}}}}}}, "/api/todos/classify": {"post": {"summary": "Classify Todo", "description": "Classify a todo item description into one of the categories: Work, Home, or Other.\nUses OpenAI API for classification.", "operationId": "classify_todo_api_todos_classify_post", "requestBody": {"content": {"application/json": {"schema": {"$ref": "#/components/schemas/TodoClassificationRequest"}}}, "required": true}, "responses": {"200": {"description": "Successful Response", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/TodoClassificationResponse"}}}}, "422": {"description": "Validation Error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/HTTPValidationError"}}}}}}}}, "components": {"schemas": {"HTTPValidationError": {"properties": {"detail": {"items": {"$ref": "#/components/schemas/ValidationError"}, "type": "array", "title": "Detail"}}, "type": "object", "title": "HTTPValidationError"}, "TodoCategory": {"type": "string", "enum": ["Work", "Home", "Other"], "title": "TodoCategory"}, "TodoClassificationRequest": {"properties": {"description": {"type": "string", "title": "Description"}}, "type": "object", "required": ["description"], "title": "TodoClassificationRequest"}, "TodoClassificationResponse": {"properties": {"description": {"type": "string", "title": "Description"}, "category": {"$ref": "#/components/schemas/TodoCategory"}, "confidence": {"type": "number", "title": "Confidence"}}, "type": "object", "required": ["description", "category", "confidence"], "title": "TodoClassificationResponse"}, "ValidationError": {"properties": {"loc": {"items": {"anyOf": [{"type": "string"}, {"type": "integer"}]}, "type": "array", "title": "Location"}, "msg": {"type": "string", "title": "Message"}, "type": {"type": "string", "title": "Error Type"}}, "type": "object", "required": ["loc", "msg", "type"], "title": "ValidationError"}}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Vida AI Analytics Engine",
+    "description": "Advanced analytics service for restaurant performance management with statistical correlation analysis and revenue forecasting",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Redirect To Swagger",
+        "operationId": "redirect_to_swagger__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Health check endpoint for service monitoring",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/correlation": {
+      "post": {
+        "summary": "Calculate Correlation",
+        "description": "Calculate correlations between operational metrics and revenue.\nFetches real data from .NET API and performs correlation analysis.",
+        "operationId": "calculate_correlation_analytics_correlation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CorrelationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrelationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/analytics/forecast": {
+      "post": {
+        "summary": "Forecast Revenue",
+        "description": "Generate revenue forecasts using linear trend analysis.\nProvides predictions with confidence intervals.",
+        "operationId": "forecast_revenue_analytics_forecast_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForecastRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForecastResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CorrelationPair": {
+        "properties": {
+          "metric1": {
+            "type": "string",
+            "title": "Metric1"
+          },
+          "metric2": {
+            "type": "string",
+            "title": "Metric2"
+          },
+          "correlation_coefficient": {
+            "type": "number",
+            "title": "Correlation Coefficient"
+          },
+          "p_value": {
+            "type": "number",
+            "title": "P Value"
+          },
+          "strength": {
+            "type": "string",
+            "title": "Strength"
+          },
+          "significant": {
+            "type": "boolean",
+            "title": "Significant"
+          }
+        },
+        "type": "object",
+        "required": [
+          "metric1",
+          "metric2",
+          "correlation_coefficient",
+          "p_value",
+          "strength",
+          "significant"
+        ],
+        "title": "CorrelationPair"
+      },
+      "CorrelationRequest": {
+        "properties": {
+          "restaurant_id": {
+            "type": "integer",
+            "title": "Restaurant Id"
+          },
+          "metrics": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metrics"
+          },
+          "correlation_type": {
+            "type": "string",
+            "title": "Correlation Type",
+            "default": "pearson"
+          }
+        },
+        "type": "object",
+        "required": [
+          "restaurant_id"
+        ],
+        "title": "CorrelationRequest"
+      },
+      "CorrelationResponse": {
+        "properties": {
+          "restaurant_id": {
+            "type": "integer",
+            "title": "Restaurant Id"
+          },
+          "correlations": {
+            "items": {
+              "$ref": "#/components/schemas/CorrelationPair"
+            },
+            "type": "array",
+            "title": "Correlations"
+          },
+          "total_data_points": {
+            "type": "integer",
+            "title": "Total Data Points"
+          },
+          "analysis_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Analysis Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "restaurant_id",
+          "correlations",
+          "total_data_points",
+          "analysis_timestamp"
+        ],
+        "title": "CorrelationResponse"
+      },
+      "ForecastPoint": {
+        "properties": {
+          "date": {
+            "type": "string",
+            "title": "Date"
+          },
+          "predicted_value": {
+            "type": "number",
+            "title": "Predicted Value"
+          },
+          "confidence_interval_lower": {
+            "type": "number",
+            "title": "Confidence Interval Lower"
+          },
+          "confidence_interval_upper": {
+            "type": "number",
+            "title": "Confidence Interval Upper"
+          }
+        },
+        "type": "object",
+        "required": [
+          "date",
+          "predicted_value",
+          "confidence_interval_lower",
+          "confidence_interval_upper"
+        ],
+        "title": "ForecastPoint"
+      },
+      "ForecastRequest": {
+        "properties": {
+          "historical_data": {
+            "items": {
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Historical Data"
+          },
+          "forecast_days": {
+            "type": "integer",
+            "title": "Forecast Days",
+            "default": 30
+          },
+          "restaurant_id": {
+            "type": "integer",
+            "title": "Restaurant Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "historical_data",
+          "restaurant_id"
+        ],
+        "title": "ForecastRequest"
+      },
+      "ForecastResponse": {
+        "properties": {
+          "restaurant_id": {
+            "type": "integer",
+            "title": "Restaurant Id"
+          },
+          "forecast_points": {
+            "items": {
+              "$ref": "#/components/schemas/ForecastPoint"
+            },
+            "type": "array",
+            "title": "Forecast Points"
+          },
+          "model_accuracy": {
+            "type": "number",
+            "title": "Model Accuracy"
+          },
+          "trend_direction": {
+            "type": "string",
+            "title": "Trend Direction"
+          },
+          "analysis_timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Analysis Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "restaurant_id",
+          "forecast_points",
+          "model_accuracy",
+          "trend_direction",
+          "analysis_timestamp"
+        ],
+        "title": "ForecastResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

@@ -22,7 +22,7 @@
 
   <Target Name="PostBuild" BeforeTargets="AfterBuild" Condition="'$(DisableNSwag)' != 'true'">
     <Exec ContinueOnError="true" WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net90) run nswag.json /variables:Configuration=$(Configuration),OutDir=$(OutDir)" />
-    <Exec Command="npm run generate-api" WorkingDirectory="$(ProjectDir)../web" />
+    <!-- <Exec Command="npm run generate-api" WorkingDirectory="$(ProjectDir)../web" /> -->
   </Target>
 
 </Project>
