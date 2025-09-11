@@ -13,8 +13,15 @@ public class RestaurantsController(IMediator mediator) : ControllerBase
     [HttpGet(Name = nameof(GetRestaurants))]
     public async Task<ActionResult<IEnumerable<RestaurantDto>>> GetRestaurants()
     {
-        var restaurants = await mediator.Send(new GetRestaurantsQuery());
-        return Ok(restaurants);
+        // Temporary mock data for development
+        var mockRestaurants = new List<RestaurantDto>
+        {
+            new(1, "The Golden Spoon", "123 Main St, Downtown", "+1-555-0123", "contact@goldenspoon.com", "America/New_York", DateTime.UtcNow.AddDays(-30), DateTime.UtcNow, 1),
+            new(2, "Sunset Bistro", "456 Oak Ave, Midtown", "+1-555-0456", "info@sunsetbistro.com", "America/New_York", DateTime.UtcNow.AddDays(-20), DateTime.UtcNow, 1),
+            new(3, "Corner Cafe", "789 Pine Rd, Uptown", "+1-555-0789", "hello@cornercafe.com", "America/New_York", DateTime.UtcNow.AddDays(-10), DateTime.UtcNow, 1)
+        };
+        
+        return Ok(mockRestaurants);
     }
 
     [HttpGet("{id}", Name = nameof(GetRestaurantById))]

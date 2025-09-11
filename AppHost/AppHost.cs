@@ -19,16 +19,14 @@ var pythonApi = builder.AddPythonApp("pythonapi","../PythonApi","run_app.py")
 #pragma warning restore ASPIREHOSTINGPYTHON001
 
 var apiService = builder.AddProject<Projects.ApiService>("apiservice")
-    .WithReference(pythonApi)
     .WithReference(sqlServer)
     .WaitFor(sqlServer)
-    .WaitFor(migrationService)
-    .WithHttpHealthCheck("/health");
+    .WaitFor(migrationService);
 
-builder.AddNodeApp("web", "../web", "pnpm", ["dev"])
+builder.AddNpmApp("web", "../web", "dev")
     .WithReference(apiService)
     .WithReference(pythonApi)
-    .WithHttpEndpoint(port: 3000, name: "http")
+    .WithHttpEndpoint(3060, env: "PORT")
     .WithExternalHttpEndpoints()
     .PublishAsDockerFile();
 

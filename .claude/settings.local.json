@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Select-Object Id,ProcessName)",
+      "Bash(dotnet run:*)",
+      "Bash(curl:*)",
+      "Bash(taskkill:*)",
+      "Bash(dotnet clean:*)",
+      "Bash(dotnet build:*)",
+      "Bash(pnpm dev:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
